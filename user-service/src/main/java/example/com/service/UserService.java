@@ -3,6 +3,7 @@ package example.com.service;
 import example.com.model.UserServiceModel;
 import example.com.repository.UserServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,15 +13,18 @@ import java.util.Optional;
 public class UserService {
 
     private final UserServiceRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserServiceRepository userRepository) {
+    public UserService(UserServiceRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Register a new user
     public UserServiceModel registerUser(UserServiceModel user) {
-        // Add logic to hash the password (if needed) and save the user
+        // Hash the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
