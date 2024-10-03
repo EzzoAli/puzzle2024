@@ -7,14 +7,20 @@
         <groupId>example.com</groupId>
         <artifactId>escape-room</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <groupId>com.example</groupId>
     <artifactId>user-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>20</maven.compiler.source>
-        <maven.compiler.target>20</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <dependencies>
+        <!-- Inherits dependencies from parent POM -->
+    </dependencies>
 
+    <build>
+        <plugins>
+            <!-- Inherits plugins from parent POM -->
+        </plugins>
+    </build>
 </project>
