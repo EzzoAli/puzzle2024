@@ -11,7 +11,8 @@
 	<groupId>example.com</groupId>
 	<artifactId>escape-room</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Escape Room</name>
+    <packaging>pom</packaging>
+    <name>Escape Room</name>
 	<description>project for an escape room</description>
 	<url/>
 	<licenses>
@@ -20,7 +21,10 @@
 	<developers>
 		<developer/>
 	</developers>
-	<scm>
+    <modules>
+        <module>user-service</module>
+    </modules>
+    <scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>
