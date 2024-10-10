@@ -23,6 +23,10 @@ public class UserService {
 
     // Register a new user
     public UserServiceModel registerUser(UserServiceModel user) {
+        // Default role to "USER" if none is provided
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
         // Hash the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
