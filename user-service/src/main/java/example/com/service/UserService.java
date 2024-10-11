@@ -22,7 +22,7 @@ public class UserService {
     }
 
     // Register a new user
-    public UserServiceModel registerUser(UserServiceModel user) {
+    public void registerUser(UserServiceModel user) {
         // Default role to "USER" if none is provided
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("USER");
@@ -32,7 +32,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Saving the user. No need to manually set createdAt, @PrePersist in UserServiceModel handles it
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     // Find user by email

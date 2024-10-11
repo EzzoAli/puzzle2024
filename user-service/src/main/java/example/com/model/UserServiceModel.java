@@ -53,6 +53,8 @@ public class UserServiceModel {
 
     // Default constructor
     public UserServiceModel() {
+        // Ensure createdAt is set in default constructor (as a fallback)
+        this.createdAt = LocalDateTime.now();
     }
 
     // Constructor for setting initial values
@@ -64,9 +66,13 @@ public class UserServiceModel {
         this.createdAt = LocalDateTime.now(); // Automatically set to current date-time
     }
 
-    // Getters and Setters
+    // Helper method to automatically set createdAt before saving a new user
+    @PrePersist
+    public void setCreationTimestamp() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-    // Helper method to update timestamps
+    // Helper method to update updatedAt before saving any updates to the user
     @PreUpdate
     public void setLastUpdate() {
         this.updatedAt = LocalDateTime.now();
