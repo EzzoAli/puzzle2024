@@ -27,8 +27,11 @@ public class UserService {
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("USER");
         }
+
         // Hash the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Saving the user. No need to manually set createdAt, @PrePersist in UserServiceModel handles it
         return userRepository.save(user);
     }
 

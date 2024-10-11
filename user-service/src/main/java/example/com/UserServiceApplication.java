@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -23,21 +25,20 @@ public class UserServiceApplication {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
-
-                // Allow public access to the registration and login endpoints
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login", "/api/users/home").permitAll() // Public access to registration and login
-                        .anyRequest().authenticated() // Secure other endpoints
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for APIs and H2 console
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Allow H2 console to load frames (new syntax)
                 )
-
-                // Use Thymeleaf login page and redirect to home page after login
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/users/register", "/api/users/login", "/api/users/home", "/h2-console/**").permitAll() // Allow public access to H2 console
+                        .anyRequest().authenticated() // Protect other endpoints
+                )
                 .formLogin(form -> form
-                        .loginPage("/api/users/login") // Use Thymeleaf login page
+                        .loginPage("/api/users/login") // Thymeleaf login page
                         .defaultSuccessUrl("/api/users/home", true) // Redirect to home page after login
                         .permitAll()
                 )
-
                 .build();
     }
+
 }
