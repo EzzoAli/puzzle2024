@@ -10,10 +10,21 @@
     <div class="row justify-content-center">
         <div class="col-md-4">
             <h1 class="text-center">Register</h1>
+
+            <!-- Success message -->
+            <div class="alert alert-success text-center" th:if="${successMessage}">
+                <p th:text="${successMessage}"></p>
+            </div>
+
+            <!-- Error message -->
+            <div class="alert alert-danger text-center" th:if="${errorMessage}">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
             <form th:action="@{/api/users/register}" method="post">
                 <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="name" />
+                    <label for="username">Username:</label> <!-- Changed to Username -->
+                    <input type="text" class="form-control" id="username" name="username" />
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>

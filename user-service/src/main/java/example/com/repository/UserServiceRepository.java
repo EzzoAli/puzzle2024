@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface UserServiceRepository extends JpaRepository<UserServiceModel, Long> {
     Optional<UserServiceModel> findByEmail(String email);
+    Optional<UserServiceModel> findByUsername(String username);  // New method for finding by username
 }

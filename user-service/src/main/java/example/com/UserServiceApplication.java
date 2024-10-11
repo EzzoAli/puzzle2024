@@ -21,24 +21,28 @@ public class UserServiceApplication {
         return new BCryptPasswordEncoder();
     }
 
-    // Security configuration to use Thymeleaf views for login and home
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for APIs and H2 console
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for APIs
                 .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Allow H2 console to load frames (new syntax)
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Allow H2 console frames
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login", "/api/users/home", "/h2-console/**").permitAll() // Allow public access to H2 console
+                        .requestMatchers("/api/users/register", "/api/users/login", "/api/users/home", "/h2-console/**").permitAll() // Public access to register, login, and home
                         .anyRequest().authenticated() // Protect other endpoints
                 )
                 .formLogin(form -> form
-                        .loginPage("/api/users/login") // Thymeleaf login page
-                        .defaultSuccessUrl("/api/users/home", true) // Redirect to home page after login
+                        .loginPage("/api/users/login") // Custom login page
+                        .defaultSuccessUrl("/api/users/home", true) // Redirect to home after login
+                        .failureUrl("/api/users/login?error=true") // Redirect on login failure
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/api/users/login?logout=true") // Redirect on logout
                         .permitAll()
                 )
                 .build();
     }
-
 }

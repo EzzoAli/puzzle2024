@@ -3,10 +3,10 @@ package example.com.controller;
 import example.com.model.UserServiceModel;
 import example.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +21,21 @@ public class UserServiceController {
         this.userService = userService;
     }
 
-    // Serve the login page
+    // Serve the login page with error and success handling
     @GetMapping("/login")
-    public String login() {
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "logout", required = false) String logout,
+                        @RequestParam(value = "success", required = false) String success,
+                        Model model) {
+        if (error != null) {
+            model.addAttribute("errorMessage", "Invalid username or password!");
+        }
+        if (logout != null) {
+            model.addAttribute("successMessage", "You have been logged out successfully.");
+        }
+        if (success != null) {
+            model.addAttribute("successMessage", "Registration successful! Please log in.");
+        }
         return "login"; // Points to src/main/resources/templates/login.html
     }
 
@@ -36,9 +48,18 @@ public class UserServiceController {
 
     // Handle registration form submission
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute UserServiceModel user) {
-        userService.registerUser(user); // Save the new user
-        return "redirect:/api/users/login"; // Redirect to login after successful registration
+    public String registerUser(@ModelAttribute UserServiceModel user, Model model) {
+        // Call the service to register the user
+        String resultMessage = userService.registerUser(user);
+
+        // If registration was successful, redirect to the login page with a success message
+        if (resultMessage.equals("Registration successful!")) {
+            return "redirect:/api/users/login?success=true"; // Add a success flag in the URL
+        } else {
+            // If there is an error, display the error message on the registration page
+            model.addAttribute("errorMessage", resultMessage);
+            return "register"; // Stay on the registration page if there's an error
+        }
     }
 
     // Serve the home page after login
@@ -49,25 +70,21 @@ public class UserServiceController {
 
     // --- Existing API Endpoints for Users ---
 
-    // Get a user by email
+    // Get a user by email (API)
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserServiceModel> getUserByEmail(@PathVariable String email) {
-        Optional<UserServiceModel> user = userService.findByEmail(email);
-        return user.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<UserServiceModel> getUserByEmail(@PathVariable String email) {
+        return userService.findByEmail(email);
     }
 
-    // Get all users (for testing purposes)
+    // Get all users (API for testing purposes)
     @GetMapping
-    public ResponseEntity<List<UserServiceModel>> getAllUsers() {
-        List<UserServiceModel> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
+    public List<UserServiceModel> getAllUsers() {
+        return userService.findAllUsers();
     }
 
-    // Delete a user by ID
+    // Delete a user by ID (API)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
+    public void deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
-        return ResponseEntity.noContent().build();
     }
 }
