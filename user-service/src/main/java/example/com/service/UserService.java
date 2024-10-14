@@ -34,10 +34,8 @@ public class UserService {
             return "An account with this email already exists!";
         }
 
-        // Default role to "USER" if none is provided
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("USER");
-        }
+        // Set default role if not provided
+        assignDefaultRoleIfNotSet(user);
 
         // Hash the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -45,6 +43,13 @@ public class UserService {
         // Save the new user
         userRepository.save(user);
         return "Registration successful!";
+    }
+
+    // Method to assign a default role if not provided
+    private void assignDefaultRoleIfNotSet(UserServiceModel user) {
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");  // Default role is USER
+        }
     }
 
     // Find user by email

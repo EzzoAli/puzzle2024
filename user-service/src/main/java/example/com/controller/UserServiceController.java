@@ -2,7 +2,12 @@ package example.com.controller;
 
 import example.com.model.UserServiceModel;
 import example.com.service.UserService;
+import example.com.repository.UserServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +20,14 @@ import java.util.Optional;
 public class UserServiceController {
 
     private final UserService userService;
+    private final UserServiceRepository userServiceRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceController(UserService userService) {
+    public UserServiceController(UserService userService, UserServiceRepository userServiceRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.userServiceRepository = userServiceRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Serve the login page with error and success handling
@@ -49,17 +58,40 @@ public class UserServiceController {
     // Handle registration form submission
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserServiceModel user, Model model) {
+        // Basic password validation
+        if (user.getPassword().length() < 6) {
+            model.addAttribute("errorMessage", "Password must be at least 6 characters long.");
+            return "register";
+        }
+
+        // Encode the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         // Call the service to register the user
         String resultMessage = userService.registerUser(user);
 
-        // If registration was successful, redirect to the login page with a success message
         if (resultMessage.equals("Registration successful!")) {
-            return "redirect:/api/users/login?success=true"; // Add a success flag in the URL
+            return "redirect:/api/users/login?success=true";
         } else {
-            // If there is an error, display the error message on the registration page
             model.addAttribute("errorMessage", resultMessage);
-            return "register"; // Stay on the registration page if there's an error
+            return "register";
         }
+    }
+
+    // Custom UserDetailsService logic inside the controller
+    @GetMapping("/loadUserByUsername/{username}")
+    @ResponseBody
+    public UserDetails loadUserByUsername(@PathVariable String username) throws UsernameNotFoundException {
+        UserServiceModel user = userServiceRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        // Convert the role to Spring Security format
+        String role = "ROLE_" + user.getRole().toUpperCase();
+
+        return User.withUsername(user.getUsername())
+                .password(user.getPassword()) // Use the encoded password from DB
+                .authorities(role)
+                .build();
     }
 
     // Serve the home page after login
@@ -68,22 +100,23 @@ public class UserServiceController {
         return "home"; // Points to src/main/resources/templates/home.html
     }
 
-    // --- Existing API Endpoints for Users ---
-
     // Get a user by email (API)
     @GetMapping("/email/{email}")
+    @ResponseBody
     public Optional<UserServiceModel> getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email);
     }
 
     // Get all users (API for testing purposes)
     @GetMapping
+    @ResponseBody
     public List<UserServiceModel> getAllUsers() {
         return userService.findAllUsers();
     }
 
     // Delete a user by ID (API)
     @DeleteMapping("/{id}")
+    @ResponseBody
     public void deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
     }

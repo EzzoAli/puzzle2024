@@ -38,7 +38,7 @@ public class UserServiceModel {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -59,11 +59,17 @@ public class UserServiceModel {
     // Default constructor
     public UserServiceModel() {}
 
-    public UserServiceModel(String username, String email, String password, String role) {
+    // Constructor without password for safer creation, handling encryption in the service layer
+    public UserServiceModel(String username, String email, String role) {
         this.username = username;
         this.email = email;
-        this.password = password;
-        this.role = role;
+        this.role = role != null ? role : "USER"; // Default to "USER" role if none provided
         this.createdAt = LocalDateTime.now(); // Automatically set the current date-time
+    }
+
+    // Constructor with password, making sure it’s encrypted in the service layer
+    public UserServiceModel(String username, String email, String password, String role) {
+        this(username, email, role); // Chain constructor
+        this.password = password; // Ensure encryption is handled outside of this model
     }
 }

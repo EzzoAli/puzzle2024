@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/testdb  # File-based H2 database (relative to the project directory)
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:  # Leave empty for default H2 setup
+    hikari:
+      maximum-pool-size: 10  # Configure Hikari connection pool size
+      connection-timeout: 30000  # Set timeout for DB connections in ms
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect  # Specify the dialect for H2
+    hibernate:
+      ddl-auto: update  # Automatically update schema based on entities
+    show-sql: true  # Show SQL queries in the logs for easier debugging
+    properties:
+      hibernate:
+        format_sql: true  # Format SQL for better readability in logs
+  h2:
+    console:
+      enabled: true
+      path: /h2-console  # Access the H2 console at this path
+      settings:
+        web-allow-others: false  # Restrict console access to localhost
+
+  sql:
+    init:
+      mode: always  # Always initialize the database using schema.sql and data.sql if present
+
+server:
+  port: 8080  # Set the server port (default is 8080)
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG  # Log Spring Security events
+    org.hibernate.SQL: DEBUG  # Log SQL queries executed by Hibernate
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # Log SQL parameter bindings
+    org.springframework.web: DEBUG  # To see all web requests and responses
+    example.com: DEBUG  # For your custom package
