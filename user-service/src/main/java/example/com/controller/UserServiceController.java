@@ -2,11 +2,7 @@ package example.com.controller;
 
 import example.com.model.UserServiceModel;
 import example.com.service.UserService;
-import example.com.repository.UserServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,13 +16,11 @@ import java.util.Optional;
 public class UserServiceController {
 
     private final UserService userService;
-    private final UserServiceRepository userServiceRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceController(UserService userService, UserServiceRepository userServiceRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceController(UserService userService, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.userServiceRepository = userServiceRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -76,22 +70,6 @@ public class UserServiceController {
             model.addAttribute("errorMessage", resultMessage);
             return "register";
         }
-    }
-
-    // Custom UserDetailsService logic inside the controller
-    @GetMapping("/loadUserByUsername/{username}")
-    @ResponseBody
-    public UserDetails loadUserByUsername(@PathVariable String username) throws UsernameNotFoundException {
-        UserServiceModel user = userServiceRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        // Convert the role to Spring Security format
-        String role = "ROLE_" + user.getRole().toUpperCase();
-
-        return User.withUsername(user.getUsername())
-                .password(user.getPassword()) // Use the encoded password from DB
-                .authorities(role)
-                .build();
     }
 
     // Serve the home page after login
