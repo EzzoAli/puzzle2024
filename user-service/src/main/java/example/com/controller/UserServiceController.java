@@ -3,11 +3,9 @@ package example.com.controller;
 import example.com.model.UserServiceModel;
 import example.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -16,12 +14,10 @@ import java.util.Optional;
 public class UserServiceController {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceController(UserService userService, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     // Serve the login page with error and success handling
@@ -58,10 +54,7 @@ public class UserServiceController {
             return "register";
         }
 
-        // Encode the password before saving
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // Call the service to register the user
+        // Call the service to register the user (the service will handle password encoding)
         String resultMessage = userService.registerUser(user);
 
         if (resultMessage.equals("Registration successful!")) {

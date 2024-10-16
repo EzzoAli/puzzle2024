@@ -41,13 +41,14 @@ public class UserService implements UserDetailsService {
         // Set default role if not provided
         assignDefaultRoleIfNotSet(user);
 
-        // Hash the password before saving
+        // Hash the password before saving (important that this is done here)
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Save the new user
         userRepository.save(user);
         return "Registration successful!";
     }
+
 
     // Method to assign a default role if not provided
     private void assignDefaultRoleIfNotSet(UserServiceModel user) {
@@ -65,7 +66,7 @@ public class UserService implements UserDetailsService {
         String role = "ROLE_" + user.getRole().toUpperCase();
 
         return User.withUsername(user.getUsername())
-                .password(user.getPassword()) // Use the encoded password from DB
+                .password(user.getPassword())  // Ensure this is the encoded password
                 .authorities(role)
                 .build();
     }
