@@ -1,0 +1,35 @@
+server:
+  port: 8081  # Set the server port for the Room Service
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/room_db;DB_CLOSE_ON_EXIT=FALSE  # File-based database named room_db
+    driver-class-name: org.h2.Driver
+    username: sa  # Default username for H2
+    password:  # H2 has an empty default password
+
+  h2:
+    console:
+      enabled: true  # Enable H2 console for browser access
+      path: /h2-console  # Path for accessing the H2 console
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # Automatically update the database schema
+    show-sql: true  # Show SQL queries in the console
+    properties:
+      hibernate:
+        format_sql: true  # Format the SQL output
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG  # Log Spring Security events
+    org.hibernate.SQL: DEBUG  # Log SQL queries executed by Hibernate
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # Log SQL parameter bindings
+    org.springframework.web: DEBUG  # To see all web requests and responses
+    example.com: DEBUG  # For your custom package
+
+# Optional: Add any specific configurations for room service
+room-service:
+  max-players: 2  # Maximum players per room (can also be configured dynamically)

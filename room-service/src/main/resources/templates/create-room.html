@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/styles.css}"> <!-- Link to your CSS using Thymeleaf -->
+    <title>Create Room</title>
+</head>
+<body>
+<div class="container">
+    <h1>Create a New Room</h1>
+
+    <!-- Thymeleaf form, which binds to a RoomServiceModel object -->
+    <form th:action="@{/api/rooms}" th:object="${room}" method="post">
+        <div class="form-group">
+            <label for="name">Room Name:</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="difficultyLevel">Difficulty Level:</label>
+            <select id="difficultyLevel" th:field="*{difficultyLevel}" required>
+                <option th:value="1">Easy</option>
+                <option th:value="2">Medium</option>
+                <option th:value="3">Hard</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Room Status:</label>
+            <select id="status" th:field="*{status}" required>
+                <option th:value="'ACTIVE'">Active</option>
+                <option th:value="'INACTIVE'">Inactive</option>
+            </select>
+        </div>
+
+        <button type="submit">Create Room</button>
+    </form>
+</div>
+</body>
+</html>

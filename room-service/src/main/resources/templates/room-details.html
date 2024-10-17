@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/styles.css}"> <!-- Link to your CSS using Thymeleaf -->
+  <title>Room Details</title>
+</head>
+<body>
+<div class="container">
+  <h1 th:text="${room.name}">Room Name</h1>
+  <p th:text="'Difficulty: ' + ${room.difficultyLevel}">Difficulty: </p>
+  <p th:text="'Status: ' + ${room.status}">Status: </p>
+
+  <h2>Players</h2>
+  <ul>
+    <!-- Iterate over the list of players -->
+    <li th:each="player : ${room.players}" th:text="${player.name}">Player Name</li>
+  </ul>
+
+  <!-- Join Room button, posts to join the room -->
+  <form th:action="@{/rooms/join}" method="post">
+    <input type="hidden" th:value="${room.roomId}" name="roomId">
+    <button type="submit">Join Room</button>
+  </form>
+</div>
+</body>
+</html>
