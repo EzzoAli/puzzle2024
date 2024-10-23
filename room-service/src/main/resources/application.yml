@@ -21,6 +21,9 @@ spring:
       hibernate:
         format_sql: true  # Format the SQL output
 
+  security:
+    enabled: false  # Disable Spring Security in the room-service
+
 logging:
   level:
     root: INFO
