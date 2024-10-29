@@ -17,10 +17,14 @@ public class RoomServiceSecurityConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // Allow H2 console access
                 .authorizeHttpRequests(auth -> auth
-                        // Permit all requests to error page and static resources (CSS, JS)
+                        // Permit access to error page and static resources (CSS, JS, images, etc.)
                         .requestMatchers("/error", "/css/**", "/js/**", "/images/**", "/h2-console/**").permitAll()
-                        .requestMatchers("/api/rooms/**").authenticated() // Require authentication for API endpoints
-                        .anyRequest().permitAll()) // Allow other requests
+                        // Permit access to room-related pages without requiring authentication
+                        .requestMatchers("/rooms", "/rooms/create", "/rooms/{roomId}").permitAll()
+                        // Require authentication for all API endpoints under /api/rooms
+                        .requestMatchers("/api/rooms/**").authenticated()
+                        // Allow all other requests
+                        .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login")  // Specify a custom login page if needed
                         .defaultSuccessUrl("/rooms", true)  // Redirect to the room list page after successful login

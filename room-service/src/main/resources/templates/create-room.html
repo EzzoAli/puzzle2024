@@ -11,7 +11,7 @@
     <h1>Create a New Room</h1>
 
     <!-- Thymeleaf form, which binds to a RoomServiceModel object -->
-    <form th:action="@{/api/rooms}" th:object="${room}" method="post">
+    <form th:action="@{/rooms/create}" th:object="${room}" method="post">
         <div class="form-group">
             <label for="name">Room Name:</label>
             <input type="text" id="name" th:field="*{name}" required>
