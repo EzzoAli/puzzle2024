@@ -3,31 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" th:href="@{/css/styles.css}"> <!-- Link to your CSS using Thymeleaf -->
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
   <title>List of Rooms</title>
 </head>
 <body>
 <div class="container">
   <h1>Available Rooms</h1>
   <ul id="room-list">
-    <!-- This will be populated with available rooms from your backend -->
+    <li th:each="room : ${rooms}" th:text="${room.name} + ' - ' + ${room.status} + ' ' + ${room.roomId}"
+        th:href="@{/rooms/{roomId}(roomId=${room.roomId})}"></li>
   </ul>
   <a th:href="@{/rooms/create}">Create a New Room</a>
 </div>
-
-<script>
-  // You can use JavaScript to fetch the room list from the backend and populate the #room-list
-  fetch('/api/rooms')
-          .then(response => response.json())
-          .then(data => {
-            const roomList = document.getElementById('room-list');
-            data.forEach(room => {
-              const li = document.createElement('li');
-              li.textContent = `${room.name} - ${room.status}`;
-              roomList.appendChild(li);
-            });
-          })
-          .catch(error => console.error('Error fetching rooms:', error));
-</script>
 </body>
 </html>

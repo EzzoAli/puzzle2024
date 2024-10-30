@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" th:href="@{/css/styles.css}"> <!-- Link to your CSS using Thymeleaf -->
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
   <title>Room Details</title>
 </head>
 <body>
@@ -14,11 +14,10 @@
 
   <h2>Players</h2>
   <ul>
-    <!-- Iterate over the list of players -->
     <li th:each="player : ${room.players}" th:text="${player.name}">Player Name</li>
+    <li th:if="${#lists.isEmpty(room.players)}">No players in this room.</li>
   </ul>
 
-  <!-- Join Room button, posts to join the room -->
   <form th:action="@{/rooms/join}" method="post">
     <input type="hidden" th:value="${room.roomId}" name="roomId">
     <button type="submit">Join Room</button>
