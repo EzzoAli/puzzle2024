@@ -21,8 +21,9 @@ public class RoomServiceModel {
     private String name;
 
     @Setter
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private int difficultyLevel;
+    private RoomDifficulty difficultyLevel;
 
     @Setter
     @Enumerated(EnumType.STRING)
@@ -48,7 +49,7 @@ public class RoomServiceModel {
     }
 
     // Parameterized constructor
-    public RoomServiceModel(String name, int difficultyLevel, RoomStatus status) {
+    public RoomServiceModel(String name, RoomDifficulty difficultyLevel, RoomStatus status) {
         this.name = name;
         this.difficultyLevel = difficultyLevel;
         this.status = status;

@@ -2,6 +2,7 @@ package example.com.repository;
 
 import example.com.model.RoomServiceModel;
 import example.com.model.RoomStatus;
+import example.com.model.RoomDifficulty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ public interface RoomServiceRepository extends JpaRepository<RoomServiceModel, L
     List<RoomServiceModel> findByStatus(RoomStatus status);
 
     // Custom query to find rooms by difficulty level
-    List<RoomServiceModel> findByDifficultyLevel(int difficultyLevel);
+    List<RoomServiceModel> findByDifficultyLevel(RoomDifficulty difficultyLevel);
 
     // You can add more custom query methods as needed
 }
