@@ -9,10 +9,21 @@
 <body>
 <div class="container">
   <h1>Available Rooms</h1>
+
+  <!-- Display a message if there are no rooms -->
+  <p th:if="${#lists.isEmpty(rooms)}">No rooms available.</p>
+
+  <!-- Room list -->
   <ul id="room-list">
-    <li th:each="room : ${rooms}" th:text="${room.name} + ' - ' + ${room.status} + ' ' + ${room.roomId}"
-        th:href="@{/rooms/{roomId}(roomId=${room.roomId})}"></li>
+    <li th:each="room : ${rooms}">
+      <a th:href="@{/rooms/{roomId}(roomId=${room.roomId})}"
+         th:text="${room.name} + ' - ' + ${room.status} + ' (ID: ' + ${room.roomId} + ')'">
+        Room Details
+      </a>
+    </li>
   </ul>
+
+  <!-- Link to create a new room -->
   <a th:href="@{/rooms/create}">Create a New Room</a>
 </div>
 </body>

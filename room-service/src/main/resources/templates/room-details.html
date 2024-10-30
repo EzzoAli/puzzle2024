@@ -14,10 +14,12 @@
 
   <h2>Players</h2>
   <ul>
+    <!-- Display each player's name or a message if no players are present -->
     <li th:each="player : ${room.players}" th:text="${player.name}">Player Name</li>
     <li th:if="${#lists.isEmpty(room.players)}">No players in this room.</li>
   </ul>
 
+  <!-- Form to join the room -->
   <form th:action="@{/rooms/join}" method="post">
     <input type="hidden" th:value="${room.roomId}" name="roomId">
     <button type="submit">Join Room</button>
