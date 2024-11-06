@@ -20,9 +20,9 @@
         <div class="form-group">
             <label for="difficultyLevel">Difficulty Level:</label>
             <select id="difficultyLevel" th:field="*{difficultyLevel}" required>
-                <option th:value="1">Easy</option>
-                <option th:value="2">Medium</option>
-                <option th:value="3">Hard</option>
+                <option th:value="'EASY'">Easy</option>
+                <option th:value="'MEDIUM'">Medium</option>
+                <option th:value="'HARD'">Hard</option>
             </select>
         </div>
 

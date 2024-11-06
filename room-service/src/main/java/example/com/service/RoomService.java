@@ -1,5 +1,6 @@
 package example.com.service;
 
+import example.com.model.RoomDifficulty;
 import example.com.model.RoomServiceModel;
 import example.com.model.RoomStatus;
 import example.com.model.UserServiceModel;
@@ -61,9 +62,14 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
-    // Method to find rooms by status
+    // Method to get rooms by status
     public List<RoomServiceModel> getRoomsByStatus(RoomStatus status) {
         return roomRepository.findByStatus(status);
+    }
+
+    // Method to get rooms by difficulty level
+    public List<RoomServiceModel> getRoomsByDifficulty(RoomDifficulty difficulty) {
+        return roomRepository.findByDifficultyLevel(difficulty);
     }
 
     // Method for a user to join a room
