@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "puzzle_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Puzzle {
 
     @Id
@@ -21,8 +23,8 @@ public abstract class Puzzle {
     @Column(nullable = false)
     private String description; // Short description of the puzzle
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PuzzleDifficulty difficulty; // EASY, MEDIUM, HARD
 
     @ManyToOne
