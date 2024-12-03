@@ -1,0 +1,32 @@
+server:
+  port: 8082  # Unique port for the Puzzle Service
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/puzzle_db;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update  # Automatically update the database schema
+    show-sql: true      # Display SQL queries in logs
+    properties:
+      hibernate:
+        format_sql: true  # Format SQL for better readability
+  h2:
+    console:
+      enabled: true       # Enable H2 console for browser access
+      path: /h2-console   # Path for accessing the H2 console
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG  # Debug logs for Spring Security
+    org.hibernate.SQL: DEBUG             # Debug SQL queries
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # Debug SQL parameter bindings
+
+# Service-specific configurations
+puzzle-service:
+  timer-duration: PT10M  # Default timer duration for puzzles (ISO-8601 duration format)
+  max-puzzles-per-game: 5  # Maximum puzzles allowed in a single game

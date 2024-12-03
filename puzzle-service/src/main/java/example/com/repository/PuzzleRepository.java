@@ -12,6 +12,7 @@ public interface PuzzleRepository extends JpaRepository<Puzzle, Long> {
     // Find puzzles by difficulty level
     List<Puzzle> findByDifficulty(PuzzleDifficulty difficulty);
 
-    // Find puzzles by type (using the discriminator column)
-    List<Puzzle> findByRoom_Id(Long roomId); // Find puzzles linked to a specific room
+    // Find puzzles by roomId (matches RoomServiceModel's primary key field)
+    List<Puzzle> findByRoom_RoomId(Long roomId);
 }
+
